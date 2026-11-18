@@ -69,8 +69,14 @@ public class BAuto_ParkS extends LinearOpMode {
         waitForStart();
 
         moveForward(24);
-        sleep(500);
-        rotateRight(360);
+        sleep(250);
+        rotateRight(-90);
+        sleep(250);
+        moveForward(72);
+        sleep(250);
+        rotateRight(90);
+        sleep(250);
+        moveForward(-24);
 
     }
     public void moveForward(double inches) {
