@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.limelight;
 
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -7,15 +8,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+// The class name MUST match the file name exactly.
 @TeleOp(name = "Limelight Auto Align")
-public class LimelightAutoAlignTeleOp extends OpMode {
+public class AprilTagAutoAlignmentMecanumDriveFixed extends OpMode {
 
     private final MecanumDrive drive = new MecanumDrive();
     private Limelight3A limelight;
 
     // ---- Settings you may need to change ----
     private static final int TARGET_TAG_ID = 20;      // AprilTag on the goal
-    private static final int APRILTAG_PIPELINE = 0;   // pipeline number in the Limelight web page
+    private static final int APRILTAG_PIPELINE = 0;   // must be a pipeline that includes TARGET_TAG_ID
     private static final String LIMELIGHT_NAME = "limelight"; // must match Robot Configuration
 
     // ---- PD controller (tx is in degrees) ----
@@ -73,7 +75,9 @@ public class LimelightAutoAlignTeleOp extends OpMode {
         // 3. Auto-align while the left trigger is held
         boolean aligning = gamepad1.left_trigger > 0.3;
         if (aligning && seesTag) {
-            error = goalX - tx;
+            // tx > 0 means the tag is to the RIGHT. In MecanumDrive, positive
+            // rotate turns the robot RIGHT, so error = tx - goalX turns toward the tag.
+            error = tx - goalX;
             double now = getRuntime();
             double dT = now - lastTime;
 
@@ -82,7 +86,6 @@ public class LimelightAutoAlignTeleOp extends OpMode {
             } else {
                 double pTerm = error * kP;
                 double dTerm = (dT > 0) ? ((error - lastError) / dT) * kD : 0;
-                // If the robot turns AWAY from the tag, change this to -(pTerm + dTerm)
                 rotate = Range.clip(pTerm + dTerm, -0.4, 0.4);
             }
             lastError = error;
@@ -92,7 +95,7 @@ public class LimelightAutoAlignTeleOp extends OpMode {
             lastTime = getRuntime();
         }
 
-        // 4. Drive AFTER rotate has been decided (this was the original bug)
+        // 4. Drive AFTER rotate has been decided
         drive.mecanumDrive(forward, strafe, rotate);
 
         // 5. Live tuning: B = step size, D-pad L/R = kP, D-pad U/D = kD
