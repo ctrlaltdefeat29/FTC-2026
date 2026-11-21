@@ -30,8 +30,8 @@ public class BioBuzzTeleop extends OpMode {
     private DcMotorEx launchMotor = null;
 
     Servo gateServo = null;
-    final double START_POSITION = 0.01;
-    final double STOP_POSITION = 0.28;
+    final double CLOSED_POSITION = 0.01;
+    final double OPENED_POSITION = 0.28;
     double leftFrontPower;
     double rightFrontPower;
     double leftBackPower;
@@ -69,7 +69,7 @@ public class BioBuzzTeleop extends OpMode {
 
         intakeMotor.setZeroPowerBehavior(BRAKE);
 
-        gateServo.setPosition(START_POSITION);
+        gateServo.setPosition(CLOSED_POSITION);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class BioBuzzTeleop extends OpMode {
         mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         if(gamepad1.y){
-            gateServo.setPosition(START_POSITION);
+            gateServo.setPosition(CLOSED_POSITION);
             intakeMotor.setVelocity(INTAKE_VELOCITY);
             transferMotor.setPower(0.3);
         }
@@ -94,19 +94,19 @@ public class BioBuzzTeleop extends OpMode {
             intakeMotor.setVelocity(BACKOUT_VELOCITY);
         }
         if(gamepad1.a) {
-            gateServo.setPosition(START_POSITION);
+            gateServo.setPosition(CLOSED_POSITION);
             try {
                 sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            gateServo.setPosition(STOP_POSITION);
+            gateServo.setPosition(OPENED_POSITION);
         }
         if(gamepad1.right_bumper) {
             intakeMotor.setVelocity(STOP_VELOCITY);
             while(launchMotor.getVelocity() < FLYWHEEL_VELOCITY-50);
             transferMotor.setPower(0.7);
-            gateServo.setPosition(STOP_POSITION);
+            gateServo.setPosition(OPENED_POSITION);
         }
     }
 
