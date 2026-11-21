@@ -31,7 +31,7 @@ public class BioBuzzTeleop extends OpMode {
 
     Servo gateServo = null;
     final double CLOSED_POSITION = 0.01;
-    final double OPENED_POSITION = 0.28;
+    final double OPEN_POSITION = 0.20;
     double leftFrontPower;
     double rightFrontPower;
     double leftBackPower;
@@ -49,10 +49,10 @@ public class BioBuzzTeleop extends OpMode {
         leftBackDrive = hardwareMap.get(DcMotorEx.class, "LeftBack");
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "RightBack");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         leftFrontDrive.setZeroPowerBehavior(BRAKE);
         rightFrontDrive.setZeroPowerBehavior(BRAKE);
@@ -100,13 +100,13 @@ public class BioBuzzTeleop extends OpMode {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            gateServo.setPosition(OPENED_POSITION);
+            gateServo.setPosition(OPEN_POSITION);
         }
         if(gamepad1.right_bumper) {
             intakeMotor.setVelocity(STOP_VELOCITY);
             while(launchMotor.getVelocity() < FLYWHEEL_VELOCITY-50);
             transferMotor.setPower(0.7);
-            gateServo.setPosition(OPENED_POSITION);
+            gateServo.setPosition(OPEN_POSITION);
         }
     }
 
@@ -123,10 +123,10 @@ public class BioBuzzTeleop extends OpMode {
         leftBackPower = (forward - strafe + rotate) / denominator;
         rightBackPower = (forward + strafe - rotate) / denominator;
 // Apply powers
-        leftFrontDrive.setPower(leftFrontPower*0.5);
-        rightFrontDrive.setPower(rightFrontPower*0.5);
-        leftBackDrive.setPower(leftBackPower*0.5);
-        rightBackDrive.setPower(rightBackPower*0.5);
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
 
 // Telemetry
         telemetry.addData("Forward", forward);
