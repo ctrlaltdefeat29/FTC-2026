@@ -31,7 +31,7 @@ public class BioBuzzTeleop extends OpMode {
 
     Servo gateServo = null;
     final double CLOSED_POSITION = 0.01;
-    final double OPEN_POSITION = 0.20;
+    final double OPENED_POSITION = 0.20;
     double leftFrontPower;
     double rightFrontPower;
     double leftBackPower;
@@ -100,13 +100,13 @@ public class BioBuzzTeleop extends OpMode {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            gateServo.setPosition(OPEN_POSITION);
+            gateServo.setPosition(OPENED_POSITION);
         }
         if(gamepad1.right_bumper) {
             intakeMotor.setVelocity(STOP_VELOCITY);
             while(launchMotor.getVelocity() < FLYWHEEL_VELOCITY-50);
             transferMotor.setPower(0.7);
-            gateServo.setPosition(OPEN_POSITION);
+            gateServo.setPosition(OPENED_POSITION);
         }
     }
 
