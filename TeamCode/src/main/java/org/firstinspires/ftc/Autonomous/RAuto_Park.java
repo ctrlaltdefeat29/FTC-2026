@@ -73,7 +73,9 @@ public class RAuto_Park extends LinearOpMode {
             waitForStart();
 
             moveForward(24);
+            sleep(250);
             rotateRight(90);
+            sleep(250);
             moveForward(24);
 
     }

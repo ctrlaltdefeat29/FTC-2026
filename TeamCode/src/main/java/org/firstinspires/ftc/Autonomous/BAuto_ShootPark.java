@@ -27,14 +27,14 @@ public class BAuto_ShootPark extends LinearOpMode {
     public final int TRANSFER_INIT_VELOCITY = 200;
     public final int TRANSFER_FINAl_VELOCITY = 2000;
     public final int FLYWHEEL_VELOCITY = 1400;
-    public final int STOP_VELOCITY = 0;
-
+    public final int MIN_FLYWHEEL_VELOCITY = 1350;
     private DcMotorEx launchMotor = null;
 
     Servo gateServo = null;
-    final double START_POSITION = 0.01;
-    final double STOP_POSITION = 0.28;
-
+    final double CLOSED_POSITION = 0.01;
+    final double OPENED_POSITION = 0.28;
+    final double ticksPerInch = 2.17673879787;
+    final int TRACK_WIDTH = 15;
 
     public void runOpMode() throws InterruptedException {
         leftFrontDrive = hardwareMap.get(DcMotorEx.class, "FrontLeft");
@@ -67,11 +67,95 @@ public class BAuto_ShootPark extends LinearOpMode {
 
         intakeMotor.setZeroPowerBehavior(BRAKE);
 
-        gateServo.setPosition(START_POSITION);
+        gateServo.setPosition(CLOSED_POSITION);
         telemetry.addLine("F### it, we ball");
         waitForStart();
 
-        //
+        shootAll();
+        sleep(250);
+        moveForward(120);
+        sleep(250);
+        rotateRight(-90);
+        sleep(250);
+        moveForward(72);
 
+    }
+    public void moveForward(double inches) {
+
+        int moveInches = (int) Math.round(ticksPerInch * inches);
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition() + moveInches);
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition() + moveInches);
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition()+ moveInches);
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition()+moveInches);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+
+        while (opModeIsActive() &&
+                (leftFrontDrive.isBusy() || rightFrontDrive.isBusy()) || leftBackDrive.isBusy() ||rightBackDrive.isBusy()) {
+
+            telemetry.addLine("MOVING...");
+        }
+
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void rotateRight(int moveDegrees) {
+        double turningDistance = Math.PI * TRACK_WIDTH * moveDegrees / 360.0;
+        int degreesTurned = (int) Math.round(ticksPerInch * turningDistance);
+
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition() + degreesTurned);
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition() + degreesTurned);
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition() - degreesTurned);
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() - degreesTurned);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+
+        while (opModeIsActive() &&
+                (leftFrontDrive.isBusy() || rightFrontDrive.isBusy()) || leftBackDrive.isBusy() ||rightBackDrive.isBusy()) {
+        }
+
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void shootAll() {
+        launchMotor.setVelocity(FLYWHEEL_VELOCITY);
+        while(launchMotor.getVelocity() < MIN_FLYWHEEL_VELOCITY){
+            telemetry.addData("Launcher Velocity:", launchMotor.getVelocity());
+        }
+        gateServo.setPosition(OPENED_POSITION);
+        transferMotor.setVelocity(TRANSFER_FINAl_VELOCITY);
+        sleep(2000);
+        gateServo.setPosition(CLOSED_POSITION);
+        transferMotor.setVelocity(STOP_SPEED);
     }
 }
