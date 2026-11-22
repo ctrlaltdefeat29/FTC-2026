@@ -24,7 +24,7 @@ public class BioBuzzTeleop extends OpMode {
     public final int BACKOUT_VELOCITY = -800;
     public final int TRANSFER_INIT_VELOCITY = 200;
     public final int TRANSFER_FINAl_VELOCITY = 2000;
-    public final int FLYWHEEL_VELOCITY = 1150;
+    public final int FLYWHEEL_VELOCITY = 1100;
     public final int STOP_VELOCITY = 0;
 
     private DcMotorEx launchMotor = null;
@@ -84,7 +84,7 @@ public class BioBuzzTeleop extends OpMode {
         if(gamepad1.y){
             gateServo.setPosition(CLOSED_POSITION);
             intakeMotor.setVelocity(INTAKE_VELOCITY);
-            transferMotor.setPower(0.3);
+            transferMotor.setPower(0.4);
         }
         if(gamepad1.x){
             intakeMotor.setVelocity(STOP_VELOCITY);
@@ -105,7 +105,7 @@ public class BioBuzzTeleop extends OpMode {
         if(gamepad1.right_bumper) {
             intakeMotor.setVelocity(STOP_VELOCITY);
             while(launchMotor.getVelocity() < FLYWHEEL_VELOCITY-50);
-            transferMotor.setPower(0.7);
+            transferMotor.setPower(1);
             gateServo.setPosition(OPENED_POSITION);
         }
     }

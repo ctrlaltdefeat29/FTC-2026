@@ -2,12 +2,14 @@ package org.firstinspires.ftc.Autonomous;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Autonomous
 public class RAuto_Park extends LinearOpMode {
     private DcMotorEx leftFrontDrive = null;
     private DcMotorEx rightFrontDrive = null;
@@ -27,15 +29,15 @@ public class RAuto_Park extends LinearOpMode {
     public final int BACKOUT_VELOCITY = -800;
     public final int TRANSFER_INIT_VELOCITY = 200;
     public final int TRANSFER_FINAl_VELOCITY = 2000;
-    public final int FLYWHEEL_VELOCITY = 1400;
-    public final int MIN_FLYWHEEL_VELOCITY = 1350;
+    public final int FLYWHEEL_VELOCITY = 1100;
+    public final int MIN_FLYWHEEL_VELOCITY = 1050;
     private DcMotorEx launchMotor = null;
 
     Servo gateServo = null;
     final double CLOSED_POSITION = 0.01;
     final double OPENED_POSITION = 0.28;
-    final double ticksPerInch = 2.17673879787;
-    final int TRACK_WIDTH = 15;
+    final double ticksPerInch = 41.8014;
+    final int TRACK_WIDTH = 23;
 
         public void runOpMode() throws InterruptedException {
             leftFrontDrive = hardwareMap.get(DcMotorEx.class, "FrontLeft");
@@ -43,10 +45,10 @@ public class RAuto_Park extends LinearOpMode {
             leftBackDrive = hardwareMap.get(DcMotorEx.class, "LeftBack");
             rightBackDrive = hardwareMap.get(DcMotorEx.class, "RightBack");
 
-            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-            leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+            rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
             leftFrontDrive.setZeroPowerBehavior(BRAKE);
             rightFrontDrive.setZeroPowerBehavior(BRAKE);
